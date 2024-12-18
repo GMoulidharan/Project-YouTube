@@ -1,56 +1,56 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { cache, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../utils/appSlice";
 import hamberger from "../images/hamburger-menu.svg"
 import { YOUTUBE_SEARCH_API } from "../utils/constants";
+import { cacheResults } from "../utils/searchSlice";
 const Head = () => {  
 
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+
+  const searchCache = useSelector((store) => store.search);
+
+  const dispatch = useDispatch();
+
+  /**
+   * searchCache=
+   * {
+   *    "iphone": ["iphone11", "iphone14"]
+   * }
+   * searchQuery = iphone
+   */
   useEffect(() =>{
 
-    const timer = setTimeout(() => getSearchSuggestions(),200);
-
+    const timer = setTimeout(() => {
+      if(searchCache[searchQuery]){
+        setSuggestions(searchCache[searchQuery])
+      }else {
+      getSearchSuggestions()
+      }
+    },200);
     return() =>{
       clearTimeout(timer);
     }
   },[searchQuery]);
 
-  /*
-  *
-  * Key -i
-  *   - render the componenet
-  *   - useEffect();
-  *   - start timer => make an API call after 200ms 
-  * key -ip
-  *   {**
-  *     Even before 200ms I pressed (p) 
-  *     It triggers the reconsilation process again, and it has to clear things up (useEffect return is called). destroy the component
-  *   }
-  *
-  *   - render the componenet
-  *   - useEffect();
-  *   - start timer => make an API call after 200ms(NEW TIMER BEGINS)
-  * 
-  * NO KEY PRESS -Automatically make an API call
-  * 
-  * 
-  * 
-  * 
-  * 
   
-  */
 
   const getSearchSuggestions = async() =>{
     console.log("API call SQ => " + searchQuery);
     const data = await fetch(YOUTUBE_SEARCH_API + searchQuery);
     const json = await data.json();
-    // console.log(json[1]);
+    console.log(json[1]);
     setSuggestions(json[1]);
+
+    //Update cache
+    dispatch(cacheResults({
+      [searchQuery]:json[1],
+    }));
   }
 
-  const dispatch = useDispatch();
+  
   const toggleMenuHandler = () => {
     dispatch(toggleMenu());
   };
