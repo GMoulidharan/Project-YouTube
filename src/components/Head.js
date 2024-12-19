@@ -38,10 +38,10 @@ const Head = () => {
   
 
   const getSearchSuggestions = async() =>{
-    console.log("API call SQ => " + searchQuery);
+    // console.log("API call SQ => " + searchQuery);
     const data = await fetch(YOUTUBE_SEARCH_API + searchQuery);
     const json = await data.json();
-    console.log(json[1]);
+    // console.log(json[1]);
     setSuggestions(json[1]);
 
     //Update cache
