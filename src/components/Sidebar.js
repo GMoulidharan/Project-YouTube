@@ -19,6 +19,7 @@ const Sidebar = () => {
           <p className="text-lg font-bold">Home</p>
         </Link>
         <ul className="pl-4">
+          <li><Link to="/demo">Demo</Link></li>
           <li> Shorts</li>
           <li> Videos</li>
           <li> Live</li>
