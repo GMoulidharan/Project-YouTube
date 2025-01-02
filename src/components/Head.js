@@ -1,4 +1,4 @@
-import React, { cache, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../utils/appSlice";
 import hamberger from "../images/hamburger-menu.svg"
@@ -33,6 +33,7 @@ const Head = () => {
     return() =>{
       clearTimeout(timer);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[searchQuery]);
 
   
